@@ -30,55 +30,68 @@ int main(int argc, char *argv[]) {
   int c;
   extern char * optarg; 
   extern int optind, opterr; 
-  while ((c = getopt(argc, argv, "s:mi:e:t:")) != -1)
-    switch (c)
-      {
-      case 's':
-        printf("DETECT S \n");
-        sparam = optarg;
-        break;
-      case 'm':
-        printf("DETECT M \n");
-        calculTps = 1;
-        break;
-      case 'i':
-        printf("DETECT I \n");
-        numIter = atoi(optarg);
-        break;
-      case 'e':
-        printf("DETECT E \n");
-        eparam = optarg;
-        break;
-      case 't':
-        printf("DETECT T \n");
-        tparam = optarg;
-        break;
-      case '?':
-        break;
+  while ((c = getopt(argc, argv, "s:mi:e:t:")) != -1) switch (c)
+  {
+    case 's':
+      printf("DETECT S \n");
+      sparam = optarg;
+      break;
+    case 'm':
+      printf("DETECT M \n");
+      calculTps = 1;
+      break;
+    case 'i':
+      printf("DETECT I \n");
+      numIter = atoi(optarg);
+      break;
+    case 'e':
+      printf("DETECT E \n");
+      eparam = optarg;
+      break;
+    case 't':
+      printf("DETECT T \n");
+      tparam = optarg;
+      break;
+    case '?':
+      if (optopt == 'i'){
+        fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+        fprintf(stderr, "It is the number of the iteration.\n");
+      }else if (optopt == 's'){
+        fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+        fprintf(stderr, "It is the size of the matrix.\n");
+      }else if (isprint (optopt))
+        fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+      else{
+        fprintf (stderr,
+                 "Unknown option character `\\x%x'.\n",
+                 optopt);
+        return 1;
       }
-      /**
-      // On prend toutes les étapes à executer
-      for(int i = 0; i < strlen(eparam); i++){
-        switch(eparam[i]){
-          case '0':
-            //Po0ur chaque etape on prend tout les tailles de grille à utiliser
-            for(int j = 0; j < strlen(sparam); j++){
-              //Pour chaque taille de grille on prend les differents nombre de thread à utiliser
-              for(int k = 0; k < strlen(tparam); k++) {
-                //Si on a demandé la moyenne du temps d'execution on la calcule
-                printf("%i\n", sparam[j]);
-                if(calculTps)
-                  calculMoyTps(numIter,puissance+sparam[j],tparam[k]);
-                else 
-                  simulation(numIter,puissance+sparam[j],tparam[k]);                      
-              }
-            }
-            break;
+      break;
+  }
+  /**
+  // On prend toutes les étapes à executer
+  for(int i = 0; i < strlen(eparam); i++){
+    switch(eparam[i]){
+      case '0':
+        //Po0ur chaque etape on prend tout les tailles de grille à utiliser
+        for(int j = 0; j < strlen(sparam); j++){
+          //Pour chaque taille de grille on prend les differents nombre de thread à utiliser
+          for(int k = 0; k < strlen(tparam); k++) {
+            //Si on a demandé la moyenne du temps d'execution on la calcule
+            printf("%i\n", sparam[j]);
+            if(calculTps)
+              calculMoyTps(numIter,puissance+sparam[j],tparam[k]);
+            else 
+              simulation(numIter,puissance+sparam[j],tparam[k]);                      
+          }
         }
-      }
-      **/
-      calculMoyTps(numIter,puissance,1);
-      //simulation(numIter,puissance,1);
+        break;
+    }
+  }
+  **/
+  calculMoyTps(numIter,puissance,1);
+  //simulation(numIter,puissance,1);
       
 }
 
@@ -201,7 +214,7 @@ static void afficher(float** grille, int size, int nbExec) {
         printf("\n\n<------------------- Execution n° %i ------------------->\n\n", nbExec);
         for(int i = 0; i < size; i++) {
         for(int j = 0; j < size; j++) {
-          printf("%i ",(int)grille[i][j]);
+          printf("%4i ",(int)grille[i][j]);
         }
         printf("\n");
       }
@@ -224,17 +237,17 @@ static float taylor(int x, int y){
   return 0.0;
 }
 
-static float val22 = 4.5;
-static float val12 = 1/9;
-static float val11 = 1/36;
+static float COEF_ANGLE = 4.5;
+static float COEF_BORD = 1/9;
+static float COEF_ANGLE = 1/36;
 
  * on calcule en considérant une matrice dont on a les 9 valeurs proches,
- * on connait aussi les coefficients à appliquer, avec val11=val13=val31=val33
- * et val12=val21=val23=val32.
+ * on connait aussi les coefficients à appliquer, avec COEF_ANGLE=val11=val13=val31=val33
+ * et COEF_BORD=val12=val21=val23=val32.
  
 static float cellule_9(float** tab_9, int x, int y){
-  return val22 * tab_9[x][y] + val12 * (tab_9[x+1][y] + tab_9[x][y+1] 
-    + tab_9[x-1][y] + tab_9[x][y-1]) + val11 * (tab_9[x+1][y+1] 
+  return COEF_CENTRE * tab_9[x][y] + COEF_BORD * (tab_9[x+1][y] + tab_9[x][y+1] 
+    + tab_9[x-1][y] + tab_9[x][y-1]) + COEF_ANGLE * (tab_9[x+1][y+1] 
     + tab_9[x-1][y+1] + tab_9[x-1][y-1] + tab_9[x+1][y-1]);
 }
 

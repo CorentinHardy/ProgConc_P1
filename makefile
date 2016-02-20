@@ -15,12 +15,12 @@ CC_LINK = $(CC)
 	$(CC_COMPILE) -o $@ $*.c
 
 
-ALL = tst_chaleur
+ALL = tst_chaleur 
 ALL_EX = tst_chaleur.out
 
 
-tst_chaleur : test.o
-	$(CC_LINK) -o tst_chaleur.out test.o
+tst_chaleur : Chaleur.o
+	$(CC_LINK) -o tst_chaleur.out Chaleur.o
 
 # Built all thing and Everythings
 all :
