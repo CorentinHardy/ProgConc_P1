@@ -2,6 +2,21 @@
 #define __CHALEUR__
 
 int HIGH_HEAT = 666;
-int LOW_HEAT = 42;
+int LOW_HEAT = 5;
 
+float COEF_ANGLE = 1/36.0;
+float COEF_BORD = 4/36.0;
+float COEF_CENTRE = 16/36.0;
+
+static void simulation(int numIter, int puissance, int thread);
+
+static void afficher(float** grille, int size, int nbExec);
+
+static void transfert(float** grilleResult, int x, int y, float value);
+
+static void initialiser(float** grille, int size);
+
+static void appliquerTempFixe(float** grille, int size, int puissance);
+
+static void calculMoyTps(int numIter, int puissance, int thread);
 #endif
