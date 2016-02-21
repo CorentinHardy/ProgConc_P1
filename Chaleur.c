@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
   int calculTps = 0;
 
   //Nombre d'iteration
-  int numIter = 1000;
+  int numIter = 10000;
 
   //Parametre de base pour differentes options
   char* sparam = "024";
@@ -98,83 +98,113 @@ int main(int argc, char *argv[]) {
 //Calcule la moyenne du temps d'execution ce la simulatio 
 static void calculMoyTps(int numIter, int puissance, int thread) {
   int NUM_ITER = 10;
-  clock_t tps[NUM_ITER];
+  clock_t tps_clock[NUM_ITER];
+  time_t tps_time[NUM_ITER];
+
   //On effectue les NUM_ITER simulations et on stocke les temps d'execution
   for(int i = 0; i < NUM_ITER; i++){
-    clock_t t1 = clock();
+    time_t t1 = time(NULL);
+    clock_t c1 = clock();
+
     simulation(numIter,puissance,thread);
-    clock_t t2 = clock();
-    tps[i] = t2 - t1;
+
+    clock_t c2 = clock();
+    time_t t2 = time(NULL);
+
+    tps_clock[i] = c2 - c1;
+    tps_time[i] = difftime(t2, t1);
   }
 
   //On cherche les deux extremes et on les elimines
-  int max = 0;
-  int min = 0;
-    for(int i = 1; i < NUM_ITER; i++){
-      if(tps[i] > tps[max])
-        max = i;
-      if(tps[i] < tps[min])
-        min = i;
+  int max_clock = 0;
+  int min_clock = 0;
+
+  int max_time = 0;
+  int min_time = 0;
+
+  for(int i = 1; i < NUM_ITER; i++){
+
+    if(tps_clock[i] > tps_clock[max_clock])
+      max_clock = i;
+    if(tps_clock[i] < tps_clock[min_clock])
+      min_clock = i;
+
+    if(tps_time[i] > tps_time[max_time])
+      max_time = i;
+    if(tps_time[i] < tps_time[min_time])
+      min_time = i;
   }
-  tps[max] = 0;
-  tps[min] = 0;
+  tps_clock[max_clock] = 0;
+  tps_clock[min_clock] = 0;
+
+  tps_time[max_time] = 0;
+  tps_time[min_time] = 0;
+
 
   //On calcule la moyenne en ramenant le temps en secondes
-  double moyenne;
-  for(int i = 0; i < NUM_ITER; i++)
-    moyenne += (double)tps[i]/(double)CLOCKS_PER_SEC;
-  moyenne = moyenne / (0.0 + NUM_ITER-2);
+  double moyenne_clock = 0.0;
+  double moyenne_time = 0.0;
 
-  printf("Moyenne d'execution: %g \n", moyenne);
+  for(int i = 0; i < NUM_ITER; i++) {
+    moyenne_clock += (double)tps_clock[i]/(double)CLOCKS_PER_SEC;
+    printf("Temps d'execution %i: %g \n", i, tps_time[i]);
+    moyenne_time += (double)tps_time[i]/(NUM_ITER - 2);
+  }
+
+  moyenne_clock = moyenne_clock / (0.0 + NUM_ITER-2);
+  moyenne_time = moyenne_time / (0.0 + NUM_ITER-2);
+
+  printf("Moyenne d'execution: %g \n", moyenne_clock);
+  if(moyenne_time == 0.0)
+    printf("0000 !!!\n");
+  printf("Temps d'execution moyen: %g \n", moyenne_time);
 }
 
 static void simulation(int numIter, int puissance, int thread) {
-      //Initialisation des variables
-      int tab_Size = pow(2,puissance);
- 
-      float grille[tab_Size+2][tab_Size+2];
-      float grilleResult[tab_Size+2][tab_Size+2];
-                                      printf("TEST\n");
-      float* g[tab_Size+2]; 
-      float* gRes[tab_Size+2];
+  //Initialisation des variables
+  int tab_Size = pow(2,puissance);
 
-      for(int i = 0; i<tab_Size+2; i++){
-        g[i] = &grille[i];
-        gRes[i] = &grilleResult[i];
+  float grille[tab_Size+2][tab_Size+2];
+  float grilleResult[tab_Size+2][tab_Size+2];
+
+  float* g[tab_Size+2]; 
+  float* gRes[tab_Size+2];
+
+  for(int i = 0; i<tab_Size+2; i++){
+    g[i] = &grille[i];
+    gRes[i] = &grilleResult[i];
+  }
+
+  //On initialise les grilles
+  initialiser(g,tab_Size);
+  initialiser(gRes,tab_Size);
+
+  //On remplit la grille avec les temperatures fixe
+  appliquerTempFixe(g,tab_Size,puissance);
+
+  //Application de l'algo K fois
+  for(int k = 0; k < numIter; k++) {
+
+    //On parcourt le tableau réel (en enlevant les COEF_BORDs qui sont à temperature fixe)
+    for(int i = 1; i < tab_Size+1; i++){
+      for(int j = 1; j < tab_Size+1; j++){
+        transfert(gRes, i, j, grille[i][j]);
       }
+    }
 
-      //On initialise les grilles
-      initialiser(g,tab_Size);
-      initialiser(gRes,tab_Size);
+    //On recopie le tableau de resultat dans le tableau normal (sans les bords vu que l'on va de toute façon les reinitialiser)
+    for(int i = 1; i<tab_Size+1; i++)
+      for(int j = 1; j<tab_Size+1; j++) 
+        grille[i][j] = grilleResult[i][j];
 
-      //On remplit la grille avec les temperatures fixe
-      appliquerTempFixe(g,tab_Size,puissance);
+    //On reinitialise la grille de resultat
+    initialiser(gRes,tab_Size);
 
-      //Application de l'algo K fois
-      for(int k = 0; k < numIter; k++) {
+    //On parcourt la grille en remettant les bonnes valeurs pour les zones à valeur fixe
+    appliquerTempFixe(g,tab_Size,puissance);
 
-      //On parcourt le tableau réel (en enlevant les COEF_BORDs qui sont à temperature fixe)
-      for(int i = 1; i < tab_Size+1; i++){
-        for(int j = 1; j < tab_Size+1; j++){
-          float value = grille[i][j];
-          if(value != 0)
-            transfert(gRes,i,j,value);
-        }
-      }
-
-      //On recopie le tableau de resultat dans le tableau normal (sans les bords vu que l'on va de toute façon les reinitialiser)
-      for(int i = 1; i<tab_Size+1; i++)
-        for(int j = 1; j<tab_Size+1; j++) 
-          grille[i][j] = grilleResult[i][j];
-
-      //On reinitialise la grille de resultat
-      initialiser(gRes,tab_Size);
-
-      //On parcourt la grille en remettant les bonnes valeurs pour les zones à valeur fixe
-      appliquerTempFixe(g,tab_Size,puissance);
-
-      //On affiche la grille
-      afficher(g, tab_Size+2, k+1);
+    //On affiche la grille
+    // afficher(g, tab_Size+2, k+1);
   }
 }
 
@@ -201,8 +231,8 @@ static void appliquerTempFixe(float** grille, int size, int puissance) {
         grille[i][size+1] = LOW_HEAT;
       }
       //On remplit le coeur avec la temperature la plus haute
-      for(int i = pow(2,puissance-1)-pow(2,puissance-4) ; i < pow(2,puissance-1)+pow(2,puissance-4) ; i++){
-          for(int j = pow(2,puissance-1)-pow(2,puissance-4) ; j < pow(2,puissance-1)+pow(2,puissance-4) ; j++) {
+      for(int i = pow(2,puissance-1) - pow(2,puissance-4) + 1; i < pow(2,puissance-1) + pow(2,puissance-4) + 1; i++){
+          for(int j = pow(2,puissance-1) - pow(2,puissance-4) + 1; j < pow(2,puissance-1) + pow(2,puissance-4) + 1; j++) {
             grille[i][j] = HIGH_HEAT;
           }
       } 
@@ -222,6 +252,8 @@ static void afficher(float** grille, int size, int nbExec) {
 
 //Ajoute dans la grille de resultat la chaleur transféré a chaque case adjacente
 static void transfert(float** grilleResult, int x, int y, float value) {
+  if (value == 0)
+    return;
   grilleResult[x-1][y-1] += value * COEF_ANGLE;
   grilleResult[x-1][y+1] += value * COEF_ANGLE;
   grilleResult[x+1][y-1] += value * COEF_ANGLE;
@@ -232,23 +264,19 @@ static void transfert(float** grilleResult, int x, int y, float value) {
   grilleResult[x][y-1] += value * COEF_BORD;
   grilleResult[x][y] += value * COEF_CENTRE;
 }
+
 /*
 static float taylor(int x, int y){
   return 0.0;
 }
-
-static float COEF_ANGLE = 4.5;
-static float COEF_BORD = 1/9;
-static float COEF_ANGLE = 1/36;
-
+/*
  * on calcule en considérant une matrice dont on a les 9 valeurs proches,
  * on connait aussi les coefficients à appliquer, avec COEF_ANGLE=val11=val13=val31=val33
  * et COEF_BORD=val12=val21=val23=val32.
- 
+ * /
 static float cellule_9(float** tab_9, int x, int y){
   return COEF_CENTRE * tab_9[x][y] + COEF_BORD * (tab_9[x+1][y] + tab_9[x][y+1] 
     + tab_9[x-1][y] + tab_9[x][y-1]) + COEF_ANGLE * (tab_9[x+1][y+1] 
     + tab_9[x-1][y+1] + tab_9[x-1][y-1] + tab_9[x+1][y-1]);
 }
-
-*/
+//*/
