@@ -8,19 +8,22 @@ CC = gcc
 CC_COMPILE = $(CC) $(CFLAGS) $(INCL) $(DEFS)
 CC_LINK = $(CC)
 
+SRC = src/
+BIN = bin/
+
 %.o :	%.c
-	$(CC_COMPILE) -c $*.c
+	$(CC_COMPILE) -o $(BIN)$@ -c $(SRC)$*.c
 
 % :	%.c
-	$(CC_COMPILE) -o $@ $*.c
+	$(CC_COMPILE) -o $(BIN)$@ $(SRC)$*.c
 
 
 ALL = tst_chaleur 
-ALL_EX = tst_chaleur.out
+ALL_EX = $(BIN)tst_chaleur.out
 
 
 tst_chaleur : Chaleur.o
-	$(CC_LINK) -o tst_chaleur.out Chaleur.o
+	$(CC_LINK) -o $(BIN)tst_chaleur.out $(BIN)Chaleur.o
 
 # Built all thing and Everythings
 all :
@@ -30,6 +33,7 @@ all :
 clean :
 	-rm -f *.o a.out *.ps \#* *~
 	-rm -f *.stackdump core
+	-rm -f $(BIN)*m
 
 # Clean up all 
 full_clean : clean
