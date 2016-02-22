@@ -17,8 +17,8 @@ ALL_EX = $(BIN)tst_chaleur.out
 
 
 tst_chaleur :
-	$(CC_COMPILE) -o $(BIN)Chaleur.o -c $(SRC)Chaleur.c
-	$(CC_LINK) -o $(BIN)tst_chaleur.out $(BIN)Chaleur.o
+	$(CC_COMPILE) -o $(BIN)Chaleur.o -c $(SRC)Chaleur.c '-lm'
+	$(CC_LINK) -o $(BIN)tst_chaleur.out $(BIN)Chaleur.o '-lm'
 
 # Built all thing and Everythings
 all :
