@@ -11,18 +11,13 @@ CC_LINK = $(CC)
 SRC = src/
 BIN = bin/
 
-%.o :	%.c
-	$(CC_COMPILE) -o $(BIN)$@ -c $(SRC)$*.c
-
-% :	%.c
-	$(CC_COMPILE) -o $(BIN)$@ $(SRC)$*.c
-
 
 ALL = tst_chaleur 
 ALL_EX = $(BIN)tst_chaleur.out
 
 
-tst_chaleur : Chaleur.o
+tst_chaleur :
+	$(CC_COMPILE) -o $(BIN)Chaleur.o -c $(SRC)Chaleur.c
 	$(CC_LINK) -o $(BIN)tst_chaleur.out $(BIN)Chaleur.o
 
 # Built all thing and Everythings
@@ -33,7 +28,7 @@ all :
 clean :
 	-rm -f *.o a.out *.ps \#* *~
 	-rm -f *.stackdump core
-	-rm -f $(BIN)*m
+	-rm -f $(BIN)*
 
 # Clean up all 
 full_clean : clean
