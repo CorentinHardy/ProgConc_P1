@@ -56,16 +56,16 @@ int main(int argc, char *argv[]) {
         break;
       case '?':
         if (optopt == 's'){
-          fprintf (stderr, "Option -%c requiere un argument.\n", optopt);
-          fprintf(stderr, "taille de la matric\n");
+          fprintf (stderr, "Option -%c requiert un argument.\n", optopt);
+          fprintf(stderr, "taille de la matrice\n");
         }else if (optopt == 'i'){
-          fprintf (stderr, "Option -%c requiere un argument.\n", optopt);
-          fprintf(stderr, "nombre d iteration\n");
+          fprintf (stderr, "Option -%c requiert un argument.\n", optopt);
+          fprintf(stderr, "nombre d iterations\n");
         }else if (optopt == 'e'){
-          fprintf (stderr, "Option -%c requiere un argument.\n", optopt);
+          fprintf (stderr, "Option -%c requiert un argument.\n", optopt);
           fprintf(stderr, "etape a executer\n");
         }else if (optopt == 't'){
-          fprintf (stderr, "Option -%c requiere un argument.\n", optopt);
+          fprintf (stderr, "Option -%c requiert un argument.\n", optopt);
           fprintf(stderr, "nombre de thread a creer\n");
         }else if (isprint (optopt))
           fprintf (stderr, "Unknown option `-%c'.\n", optopt);
