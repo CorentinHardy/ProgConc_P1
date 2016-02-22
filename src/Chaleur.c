@@ -116,7 +116,7 @@ static void calculMoyTps(int numIter, int puissance, int thread, int flagA) {
     time_t t1 = time(NULL);
     clock_t c1 = clock();
 
-    simulation(numIter,puissance,thread,flagA,0);
+    simulation(numIter,puissance,thread,flagA,1);
 
     clock_t c2 = clock();
     time_t t2 = time(NULL);
@@ -184,8 +184,8 @@ static void simulation(int numIter, int puissance, int thread, int flagA, int af
   }
 
   //On initialise les grilles
-  initialiser(g,tab_Size);
-  initialiser(gRes,tab_Size);
+  initialiser(g,tab_Size,TEMP_FROID);
+  initialiser(gRes,tab_Size,0);
 
   //On remplit la grille avec les temperatures fixe
   appliquerTempFixe(g,tab_Size,puissance);
@@ -208,7 +208,7 @@ static void simulation(int numIter, int puissance, int thread, int flagA, int af
         grille[i][j] = grilleResult[i][j];
 
     //On reinitialise la grille de resultat
-    initialiser(gRes,tab_Size);
+    initialiser(gRes,tab_Size,0);
 
     //On parcourt la grille en remettant les bonnes valeurs pour les zones a valeur fixe
     appliquerTempFixe(g,tab_Size,puissance);
@@ -227,10 +227,10 @@ static void simulation(int numIter, int puissance, int thread, int flagA, int af
 
 
 //Met toute les valeurs de la grille a 0
-static void initialiser(float** grille, int size){
+static void initialiser(float** grille, int size, int valeur){
   for(int i = 0; i < size+2; i++)
     for(int j = 0; j < size+2; j++) 
-      grille[i][j] = 0;
+      grille[i][j] = valeur;
 }
 
 // Applique les temperatures fixes
