@@ -147,8 +147,7 @@ static void calculMoyTps(int numIter, int puissance, int thread) {
 
   for(int i = 0; i < NUM_ITER; i++) {
     moyenne_clock += (double)tps_clock[i]/(double)CLOCKS_PER_SEC;
-    printf("Temps d'execution %i: %g \n", i, tps_time[i]);
-    moyenne_time += (double)tps_time[i]/(NUM_ITER - 2);
+    moyenne_time += (double)tps_time[i];
   }
 
   moyenne_clock = moyenne_clock / (0.0 + NUM_ITER-2);
