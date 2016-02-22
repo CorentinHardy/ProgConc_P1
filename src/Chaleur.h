@@ -10,7 +10,7 @@ float COEF_CENTRE = 16/36.0;
 
 static void simulation(int numIter, int puissance, int thread, int flagA);
 
-static void afficher(float** grille, int size, int nbExec);
+static void afficher(float** grille, int size, int nbExec, int puissance);
 
 static void transfert(float** grilleResult, int x, int y, float value);
 
