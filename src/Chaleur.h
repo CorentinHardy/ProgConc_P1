@@ -14,6 +14,8 @@ static void afficher(float** grille, int size, int nbExec);
 
 static void transfert(float** grilleResult, int x, int y, float value);
 
+// static float cellule_9(float** tab_9, int x, int y);
+
 static void initialiser(float** grille, int size);
 
 static void appliquerTempFixe(float** grille, int size, int puissance);
