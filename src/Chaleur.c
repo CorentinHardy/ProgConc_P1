@@ -267,3 +267,4 @@ static void transfert(float** grilleResult, int x, int y, float value) {
   grilleResult[x][y+1] += value * COEF_BORD;
   grilleResult[x][y-1] += value * COEF_BORD;
   grilleResult[x][y] += value * COEF_CENTRE;
+}
