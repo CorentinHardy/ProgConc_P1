@@ -1,6 +1,7 @@
 /**
 
 @author Corentin Hardy, Edgar Persenda
+Date : 22/02/2015
 
 **/
 
@@ -20,7 +21,7 @@ static void afficher(float** grille, int size, int nbExec);
 
 static void transfert(float** grilleResult, int x, int y, float value);
 
-static void initialiser(float** grille, int size);
+static void initialiser(float** grille, int size, int valeur);
 
 static void appliquerTempFixe(float** grille, int size, int puissance);
 
