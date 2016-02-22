@@ -8,13 +8,11 @@ float COEF_ANGLE = 1/36.0;
 float COEF_BORD = 4/36.0;
 float COEF_CENTRE = 16/36.0;
 
-static void simulation(int numIter, int puissance, int thread, int flagA);
+static void simulation(int numIter, int puissance, int thread, int flagA, int affichage);
 
-static void afficher(float** grille, int size, int nbExec, int puissance);
+static void afficher(float** grille, int size, int nbExec);
 
 static void transfert(float** grilleResult, int x, int y, float value);
-
-// static float cellule_9(float** tab_9, int x, int y);
 
 static void initialiser(float** grille, int size);
 
