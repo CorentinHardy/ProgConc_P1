@@ -197,8 +197,8 @@ static void appliquerTempFixe(float** grille, int size, int puissance) {
 // Affiche la grille
 static void afficher(float** grille, int size, int nbExec, int puissance) {
   printf("\n\n<------------------- Execution n° %i ------------------->\n\n", nbExec);
-  for(int i = 1; i < size; i++) {
-    for(int j = 1; j < size; j++) {
+  for(int i = 0; i < size; i++) {
+    for(int j = 0; j < size; j++) {
       printf("%i ",(int)grille[i][j]);
     }
     printf("\n");
