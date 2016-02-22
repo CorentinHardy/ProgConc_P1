@@ -1,3 +1,10 @@
+/**
+
+@author Corentin Hardy, Edgar Persenda
+Date : 22/02/2015
+
+**/
+
 #include "Chaleur.h"
 #include <math.h>
 #include <stdio.h>

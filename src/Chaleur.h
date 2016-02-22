@@ -1,3 +1,9 @@
+/**
+
+@author Corentin Hardy, Edgar Persenda
+
+**/
+
 #ifndef __CHALEUR__
 #define __CHALEUR__
 
