@@ -14,13 +14,13 @@ int main(int argc, char *argv[]) {
   //Pour le calcul de la taille du probleme, de base 4
   int puissance = 4;
 
-  //Calcul du temps moyen d'execution, par defaut non
+  //Calcul du temps moyen d execution, par defaut non
   int calculTps = 1;
 
-  //Nombre d'iteration
+  //Nombre d iteration
   int numIter = 100;
 
-  //Choix d'afficher seulement la premiere et la dernière iteration
+  //Choix d afficher seulement la premiere et la derniere iteration
   int flagA = 0;
 
   //Parametre de base pour differentes options
@@ -56,37 +56,37 @@ int main(int argc, char *argv[]) {
         break;
       case '?':
         if (optopt == 's'){
-          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
-          fprintf(stderr, "It is the size of the matrix.\n");
+          fprintf (stderr, "Option -%c requiere un argument.\n", optopt);
+          fprintf(stderr, "taille de la matric\n");
         }else if (optopt == 'i'){
-          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
-          fprintf(stderr, "It is the number of the iteration.\n");
+          fprintf (stderr, "Option -%c requiere un argument.\n", optopt);
+          fprintf(stderr, "nombre d iteration\n");
         }else if (optopt == 'e'){
-          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
-          // fprintf(stderr, "\n"); //XXX
+          fprintf (stderr, "Option -%c requiere un argument.\n", optopt);
+          fprintf(stderr, "etape a executer\n");
         }else if (optopt == 't'){
-          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
-          // fprintf(stderr, "\n"); //XXX
+          fprintf (stderr, "Option -%c requiere un argument.\n", optopt);
+          fprintf(stderr, "nombre de thread a creer\n");
         }else if (isprint (optopt))
           fprintf (stderr, "Unknown option `-%c'.\n", optopt);
         else{
           fprintf (stderr,
-                   "Unknown option character `\\x%x'.\n",
+                   "option inconnu `\\x%x'.\n",
                    optopt);
           return 1;
         }
         break;
       }
   
-  // On prend toutes les etapes à executer
+  // On prend toutes les etapes a executer
   for(int i = 0; i < strlen(eparam); i++){
     switch(eparam[i]){
       case '0':
-        //Pour chaque etape on prend tout les tailles de grille à utiliser
+        //Pour chaque etape on prend tout les tailles de grille a utiliser
         for(int j = 0; j < strlen(sparam); j++){
-          //Pour chaque taille de grille on prend les differents nombre de thread à utiliser
+          //Pour chaque taille de grille on prend les differents nombre de thread a utiliser
           for(int k = 0; k < strlen(tparam); k++) {
-            //Si on a demande la moyenne du temps d'execution on la calcule
+            //Si on a demande la moyenne du temps d execution on la calcule
             if(calculTps)
               calculMoyTps(numIter,puissance+sparam[j] - '0',tparam[k] - '0', flagA);
             else 
@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
   }      
 }
 
-//Calcule la moyenne du temps d'execution ce la simulation 
+//Calcule la moyenne du temps d execution ce la simulation 
 static void calculMoyTps(int numIter, int puissance, int thread, int flagA) {
   int NUM_ITER = 10;
   clock_t tps_clock[NUM_ITER];
@@ -183,10 +183,10 @@ static void simulation(int numIter, int puissance, int thread, int flagA) {
   //On remplit la grille avec les temperatures fixe
   appliquerTempFixe(g,tab_Size,puissance);
 
-  //Application de l'algo K fois
+  //Application de l algo K fois
   for(int k = 0; k < numIter; k++) {
 
-  //On parcourt le tableau reel (en enlevant les COEF_BORDs qui sont à temperature fixe)
+  //On parcourt le tableau reel (en enlevant les COEF_BORDs qui sont a temperature fixe)
     for(int i = 1; i < tab_Size+1; i++){
       for(int j = 1; j < tab_Size+1; j++){
         float value = grille[i][j];
@@ -195,7 +195,7 @@ static void simulation(int numIter, int puissance, int thread, int flagA) {
       }
     }
 
-    //On recopie le tableau de resultat dans le tableau normal (sans les bords vu que l'on va de toute façon les reinitialiser)
+    //On recopie le tableau de resultat dans le tableau normal (sans les bords vu que l on va de toute façon les reinitialiser)
     for(int i = 1; i<tab_Size+1; i++)
       for(int j = 1; j<tab_Size+1; j++) 
         grille[i][j] = grilleResult[i][j];
@@ -203,7 +203,7 @@ static void simulation(int numIter, int puissance, int thread, int flagA) {
     //On reinitialise la grille de resultat
     initialiser(gRes,tab_Size);
 
-    //On parcourt la grille en remettant les bonnes valeurs pour les zones à valeur fixe
+    //On parcourt la grille en remettant les bonnes valeurs pour les zones a valeur fixe
     appliquerTempFixe(g,tab_Size,puissance);
 
     //On affiche la grille
@@ -226,7 +226,7 @@ static void initialiser(float** grille, int size){
 
 // Applique les temperatures fixes
 static void appliquerTempFixe(float** grille, int size, int puissance) {
-  //On remplit l'exterieur de la grille avec la temperature la plus basse
+  //On remplit l exterieur de la grille avec la temperature la plus basse
   for(int j = 0; j < size+2; j++) {
     grille[0][j] = TEMP_FROID; 
     grille[size+1][j] = TEMP_FROID;   
@@ -254,7 +254,7 @@ static void afficher(float** grille, int size, int nbExec, int puissance) {
   }
 }
 
-//Ajoute dans la grille de resultat la chaleur transféré a chaque case adjacente
+//Ajoute dans la grille de resultat la chaleur transfere a chaque case adjacente
 static void transfert(float** grilleResult, int x, int y, float value) {
   grilleResult[x-1][y-1] += value * COEF_ANGLE;
   grilleResult[x-1][y+1] += value * COEF_ANGLE;
@@ -271,8 +271,8 @@ static float taylor(int x, int y){
   return 0.0;
 }
 /*
- * on calcule en considérant une matrice dont on a les 9 valeurs proches,
- * on connait aussi les coefficients à appliquer, avec COEF_ANGLE=val11=val13=val31=val33
+ * on calcule en considerant une matrice dont on a les 9 valeurs proches,
+ * on connait aussi les coefficients a appliquer, avec COEF_ANGLE=val11=val13=val31=val33
  * et COEF_BORD=val12=val21=val23=val32.
  * /
 static float cellule_9(float** tab_9, int x, int y){
