@@ -62,6 +62,26 @@ int main(int argc, char *argv[]) {
         tparam = optarg;
         break;
       case '?':
+        if (optopt == 's'){
+          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+          fprintf(stderr, "It is the size of the matrix.\n");
+        }else if (optopt == 'i'){
+          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+          fprintf(stderr, "It is the number of the iteration.\n");
+        }else if (optopt == 'e'){
+          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+          // fprintf(stderr, "\n"); //XXX
+        }else if (optopt == 't'){
+          fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+          // fprintf(stderr, "\n"); //XXX
+        }else if (isprint (optopt))
+          fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+        else{
+          fprintf (stderr,
+                   "Unknown option character `\\x%x'.\n",
+                   optopt);
+          return 1;
+        }
         break;
       }
       
@@ -69,7 +89,7 @@ int main(int argc, char *argv[]) {
       for(int i = 0; i < strlen(eparam); i++){
         switch(eparam[i]){
           case '0':
-            //Po0ur chaque etape on prend tout les tailles de grille à utiliser
+            //Pour chaque etape on prend tout les tailles de grille à utiliser
             for(int j = 0; j < strlen(sparam); j++){
               //Pour chaque taille de grille on prend les differents nombre de thread à utiliser
               for(int k = 0; k < strlen(tparam); k++) {
@@ -93,35 +113,64 @@ int main(int argc, char *argv[]) {
 //Calcule la moyenne du temps d'execution ce la simulation 
 static void calculMoyTps(int numIter, int puissance, int thread, int flagA) {
   int NUM_ITER = 10;
-  clock_t tps[NUM_ITER];
+  clock_t tps_clock[NUM_ITER];
+  time_t tps_time[NUM_ITER];
 
   //On effectue les NUM_ITER simulations et on stocke les temps d'execution
   for(int i = 0; i < NUM_ITER; i++){
-    clock_t t1 = clock();
+    time_t t1 = time(NULL);
+    clock_t c1 = clock();
+
     simulation(numIter,puissance,thread,flagA);
-    clock_t t2 = clock();
-    tps[i] = t2 - t1;
+
+    clock_t c2 = clock();
+    time_t t2 = time(NULL);
+
+    tps_clock[i] = c2 - c1;
+    tps_time[i] = difftime(t2, t1);
   }
 
   //On cherche les deux extremes et on les elimines
-  int max = 0;
-  int min = 0;
-    for(int i = 1; i < NUM_ITER; i++){
-      if(tps[i] > tps[max])
-        max = i;
-      if(tps[i] < tps[min])
-        min = i;
+  int max_clock = 0;
+  int min_clock = 0;
+
+  int max_time = 0;
+  int min_time = 0;
+
+  for(int i = 1; i < NUM_ITER; i++){
+
+    if(tps_clock[i] > tps_clock[max_clock])
+      max_clock = i;
+    if(tps_clock[i] < tps_clock[min_clock])
+      min_clock = i;
+
+    if(tps_time[i] > tps_time[max_time])
+      max_time = i;
+    if(tps_time[i] < tps_time[min_time])
+      min_time = i;
   }
-  tps[max] = 0;
-  tps[min] = 0;
+  tps_clock[max_clock] = 0;
+  tps_clock[min_clock] = 0;
+
+  tps_time[max_time] = 0;
+  tps_time[min_time] = 0;
+
 
   //On calcule la moyenne en ramenant le temps en secondes
-  double moyenne;
-  for(int i = 0; i < NUM_ITER; i++)
-    moyenne += (double)tps[i]/(double)CLOCKS_PER_SEC;
-  moyenne = moyenne / (0.0 + NUM_ITER-2);
+  double moyenne_clock;
+  double moyenne_time;
 
-  printf("Moyenne d'execution du CPU: %g \n", moyenne);
+  for(int i = 0; i < NUM_ITER; i++) {
+    moyenne_clock += (double)tps_clock[i]/(double)CLOCKS_PER_SEC;
+    moyenne_time += (double)tps_time[i];
+  }
+
+  moyenne_clock = moyenne_clock / (0.0 + NUM_ITER-2);
+  moyenne_time = moyenne_time / (0.0 + NUM_ITER-2);
+
+  printf("Moyenne d'execution du CPU: %g \n", moyenne_clock);
+  printf("Temps d'execution moyen: %g \n", moyenne_time);
+
 }
 
 static void simulation(int numIter, int puissance, int thread, int flagA) {
