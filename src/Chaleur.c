@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
   int calculTps = 1;
 
   //Nombre d'iteration
-  int numIter = 100;
+  int numIter = 1000;
 
   //Choix d'afficher seulement la premiere et la dernière iteration
   int flagA = 0;
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
             if(calculTps)
               calculMoyTps(numIter,puissance+sparam[j] - '0',tparam[k] - '0', flagA);
             else 
-              simulation(numIter,puissance+sparam[j] - '0',tparam[k] - '0', flagA);  
+              simulation(numIter,puissance+sparam[j] - '0',tparam[k] - '0', flagA,1);  
           }
         }
         break;
@@ -109,7 +109,7 @@ static void calculMoyTps(int numIter, int puissance, int thread, int flagA) {
     time_t t1 = time(NULL);
     clock_t c1 = clock();
 
-    simulation(numIter,puissance,thread,flagA);
+    simulation(numIter,puissance,thread,flagA,0);
 
     clock_t c2 = clock();
     time_t t2 = time(NULL);
@@ -161,7 +161,7 @@ static void calculMoyTps(int numIter, int puissance, int thread, int flagA) {
 
 }
 
-static void simulation(int numIter, int puissance, int thread, int flagA) {
+static void simulation(int numIter, int puissance, int thread, int flagA, int affichage) {
   //Initialisation des variables
   int tab_Size = pow(2,puissance);
  
@@ -206,13 +206,15 @@ static void simulation(int numIter, int puissance, int thread, int flagA) {
     //On parcourt la grille en remettant les bonnes valeurs pour les zones à valeur fixe
     appliquerTempFixe(g,tab_Size,puissance);
 
-    //On affiche la grille
-    if(flagA) {
-      if(k == 0 || k == numIter-1)
-        afficher(g, tab_Size+2, k+1, puissance);
+    if(affichage) {
+      //On affiche la grille
+      if(flagA) {
+        if(k == 0 || k == numIter-1)
+          afficher(g, tab_Size+2, k+1);
+      }
+      else
+        afficher(g, tab_Size+2, k+1);
     }
-    else
-      afficher(g, tab_Size+2, k+1, puissance);
   }
 }
 
@@ -244,7 +246,7 @@ static void appliquerTempFixe(float** grille, int size, int puissance) {
 }
 
 // Affiche la grille
-static void afficher(float** grille, int size, int nbExec, int puissance) {
+static void afficher(float** grille, int size, int nbExec) {
   printf("\n\n<------------------- Execution n° %i ------------------->\n\n", nbExec);
   for(int i = 0; i < size; i++) {
     for(int j = 0; j < size; j++) {
@@ -266,23 +268,3 @@ static void transfert(float** grilleResult, int x, int y, float value) {
   grilleResult[x][y-1] += value * COEF_BORD;
   grilleResult[x][y] += value * COEF_CENTRE;
 }
-/*
-static float taylor(int x, int y){
-  return 0.0;
-}
-
-static float val22 = 4.5;
-static float val12 = 1/9;
-static float val11 = 1/36;
-
- * on calcule en considérant une matrice dont on a les 9 valeurs proches,
- * on connait aussi les coefficients à appliquer, avec val11=val13=val31=val33
- * et val12=val21=val23=val32.
- 
-static float cellule_9(float** tab_9, int x, int y){
-  return val22 * tab_9[x][y] + val12 * (tab_9[x+1][y] + tab_9[x][y+1] 
-    + tab_9[x-1][y] + tab_9[x][y-1]) + val11 * (tab_9[x+1][y+1] 
-    + tab_9[x-1][y+1] + tab_9[x-1][y-1] + tab_9[x+1][y-1]);
-}
-
-*/
