@@ -1,6 +1,9 @@
 # System files
 .DS_Store
 
+# Rapport files
+*.tgz
+
 # Object files
 *.o
 *.ko
