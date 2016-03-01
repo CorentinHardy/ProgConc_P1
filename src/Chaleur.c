@@ -198,7 +198,7 @@ static void simulation(int numIter, int puissance, int thread, int flagA, int af
       for(int j = 1; j < tab_Size+1; j++){
         float value = grille[i][j];
         if(value != 0)
-          transfert(gRes,i,j,value);
+          transfert(g,gRes,i,j);
       }
     }
 
@@ -264,14 +264,8 @@ static void afficher(float** grille, int size, int nbExec) {
 }
 
 //Ajoute dans la grille de resultat la chaleur transfere a chaque case adjacente
-static void transfert(float** grilleResult, int x, int y, float value) {
-  grilleResult[x-1][y-1] += value * COEF_ANGLE;
-  grilleResult[x-1][y+1] += value * COEF_ANGLE;
-  grilleResult[x+1][y-1] += value * COEF_ANGLE;
-  grilleResult[x+1][y+1] += value * COEF_ANGLE;
-  grilleResult[x+1][y] += value * COEF_BORD;
-  grilleResult[x-1][y] += value * COEF_BORD;
-  grilleResult[x][y+1] += value * COEF_BORD;
-  grilleResult[x][y-1] += value * COEF_BORD;
-  grilleResult[x][y] += value * COEF_CENTRE;
+static void transfert(float** grille, float** grilleResult, int x, int y) {
+    grilleResult[x][y] = grille[x-1][y-1] * COEF_ANGLE + grille[x+1][y+1] * COEF_ANGLE + grille[x+1][y-1] * COEF_ANGLE + grille[x-1][y+1] * COEF_ANGLE +
+                      grille[x+1][y] * COEF_BORD + grille[x-1][y] * COEF_BORD + grille[x][y+1] * COEF_BORD + grille[x][y-1] * COEF_BORD +
+                      grille[x][y] * COEF_CENTRE;
 }

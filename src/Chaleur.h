@@ -19,7 +19,7 @@ static void simulation(int numIter, int puissance, int thread, int flagA, int af
 
 static void afficher(float** grille, int size, int nbExec);
 
-static void transfert(float** grilleResult, int x, int y, float value);
+static void transfert(float** grille, float** grilleResult, int x, int y);
 
 static void initialiser(float** grille, int size, int valeur);
 
