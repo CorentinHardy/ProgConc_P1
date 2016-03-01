@@ -1,0 +1,21 @@
+
+###TODO:
+#CODE:
+pas de recopie de tableau
+suppr les warnings -> cast mais Attention car Ariane crash....
+refaire -a ? 16*16 toujours -> ne pas afficher les cas intermediaires
+verifier la methode d'ecriture: 1 case= BONNE
+valider que l'on est toujours en vie de tps en tps
+
+#RAPPORT:
+general:
+  justifier le texte
+debut rapport: 
+  introduction + longue
+  on fixe H car on se fout de la physique
+courbes:
+  courbe line. a jeter(1er)
+  courbe 2 a mettre en logarithmique 
+    -> comparaison avec les threads
+  rajouter courbe occupation memoire:
+   -> threads ne prend pas trop ?
